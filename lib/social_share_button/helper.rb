@@ -13,11 +13,13 @@ module SocialShareButton
         special_data = opts.select { |k, _| k.to_s.start_with?('data-' + name) }
 
         link_title = t "social_share_button.share_to", :name => t("social_share_button.#{name.downcase}")
-        html << link_to("","#", {:rel => ["nofollow", rel],
-                                  "data-site" => name,
-                                  :class => "social-share-button-#{name}",
-                                  :onclick => "return SocialShareButton.share(this);",
-                                  :title => h(link_title)}.merge(extra_data).merge(special_data))
+        html << link_to("#", {:rel => ["nofollow", rel],
+                              "data-site" => name,
+                              :class => "social-share-button-#{name}",
+                              :onclick => "return SocialShareButton.share(this);",
+                              :title => h(link_title)}.merge(extra_data).merge(special_data)) do
+          block_given? ? yield(name) : ''
+        end
       end
       html << "</div>"
       raw html.join("\n")
